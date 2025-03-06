@@ -1,6 +1,10 @@
 package com.thomasleconte.langchain_test.service;
 
+import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.mistralai.MistralAiChatModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.query.Query;
@@ -19,6 +23,7 @@ public class ChatService {
 
     private final DocumentRetrieveService documentRetrieveService;
     private final MistralAiChatModel mistralAiChatModel;
+    private final ChatMemory chatMemory;
 
     public String chat(String message) {
         List<Content> docsResult = documentRetrieveService.retrieve(Query.from(message));
@@ -28,7 +33,13 @@ public class ChatService {
 
         String prompt = "Documents found: " + documentsFormatted + "\n\nUser query:" + message;
 
-        return mistralAiChatModel.chat(prompt);
+        chatMemory.add(UserMessage.from(prompt));
+
+        ChatResponse result = mistralAiChatModel.chat(chatMemory.messages());
+
+        chatMemory.add(result.aiMessage());
+
+        return result.aiMessage().text();
     }
 
 }

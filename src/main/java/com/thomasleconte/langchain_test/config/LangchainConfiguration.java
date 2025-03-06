@@ -1,5 +1,7 @@
 package com.thomasleconte.langchain_test.config;
 
+import dev.langchain4j.memory.ChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.listener.ChatModelErrorContext;
 import dev.langchain4j.model.chat.listener.ChatModelListener;
 import dev.langchain4j.model.chat.listener.ChatModelRequestContext;
@@ -33,5 +35,10 @@ public class LangchainConfiguration {
                 log.info("onError(): {}", errorContext.error().getMessage());
             }
         };
+    }
+
+    @Bean
+    public ChatMemory chatMemory() {
+        return MessageWindowChatMemory.withMaxMessages(100);
     }
 }

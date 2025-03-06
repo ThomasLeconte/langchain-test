@@ -30,7 +30,7 @@ public class DocumentRetrieveService implements ContentRetriever {
         Embedding queryEmbedding = mistralAiEmbeddingModel.embed(TextSegment.textSegment(query.text())).content();
         return chromaVectorStore.search(EmbeddingSearchRequest.builder()
                 .queryEmbedding(queryEmbedding)
-                .minScore(0.6)
+                .minScore(0.85)
                 .build())
                 .matches().stream()
                 .map(e -> Content.from(e.embedded().text()))

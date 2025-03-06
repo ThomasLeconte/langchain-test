@@ -4,6 +4,7 @@ import com.thomasleconte.langchain_test.service.ChatAssistant;
 import com.thomasleconte.langchain_test.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,7 @@ public class ChatController {
     private final ChatAssistant chatAssistant;
 
     @GetMapping("/api/v1/chat")
-    public String chatv1(@RequestParam String message) {
+    public String chatv1(@RequestParam @NotNull String message) {
         log.info("Message : {}", message);
         return chatService.chat(message);
     }
